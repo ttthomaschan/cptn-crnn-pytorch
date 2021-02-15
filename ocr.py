@@ -3,7 +3,9 @@ from math import *
 import numpy as np
 from detect.ctpn_predict import get_det_boxes
 from recognize.crnn_recognizer import PytorchOcr
+
 recognizer = PytorchOcr()
+
 
 def dis(image):
     cv2.imshow('image', image)
@@ -64,6 +66,7 @@ def charRec(img, text_recs, adjust=False):
         if partImg.shape[0] < 1 or partImg.shape[1] < 1 or partImg.shape[0] > partImg.shape[1]:  # 过滤异常图片
             continue
         text = recognizer.recognize(partImg)
+
         if len(text) > 0:
             results[index] = [rec]
             results[index].append(text)  # 识别文字

@@ -9,6 +9,7 @@ import numpy as np
 import random
 from recognize.crnn import CRNN
 from recognize import config
+from tensorboardX import SummaryWriter
 
 # copy from mydataset
 class resizeNormalize(object):
@@ -128,6 +129,10 @@ class PytorchOcr():
             image = image.cuda()
 
         preds = self.model(image)
+        net = self.model
+        writer = SummaryWriter(log_dir='./log', comment='recognizer')
+        with writer:
+            writer.add_graph(net, (image,))
 
         _, preds = preds.max(2)
         preds = preds.transpose(1, 0).contiguous().view(-1)
