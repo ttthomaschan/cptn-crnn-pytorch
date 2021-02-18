@@ -1,4 +1,10 @@
 import pickle as pkl
+import sys
+import os
+print(__name__)
+print(__file__)
+print(sys.path)
+sys.path.append(os.path.join(os.path.dirname(__file__),"../"))
 # gen alphabet via label
 # alphabet_set = set()
 # infofiles = ['infofiles/infofile_selfcollect.txt','infofiles/infofile_train_public.txt']

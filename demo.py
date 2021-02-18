@@ -5,6 +5,7 @@ import shutil
 import numpy as np
 from PIL import Image
 from glob import glob
+import sys
 
 
 def single_pic_proc(image_file):
@@ -14,6 +15,7 @@ def single_pic_proc(image_file):
 
 
 if __name__ == '__main__':
+    print(sys.path)
     image_files = glob('./test_images/*.*')
     result_dir = './test_result'
     if os.path.exists(result_dir):

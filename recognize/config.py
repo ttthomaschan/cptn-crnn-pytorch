@@ -1,5 +1,6 @@
 from recognize import keys
 
+print(__name__)
 train_infofile = 'data_set/infofile_train_10w.txt'
 train_infofile_fullimg = ''
 val_infofile = 'data_set/infofile_test.txt'

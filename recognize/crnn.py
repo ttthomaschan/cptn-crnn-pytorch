@@ -1,6 +1,9 @@
 import torch.nn as nn
 from collections import OrderedDict
+import sys
 
+print(__name__)
+print(sys.path)
 class BidirectionalLSTM(nn.Module):
 
     def __init__(self, nIn, nHidden, nOut):

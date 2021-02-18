@@ -1,5 +1,5 @@
 import torch.nn as nn
-# import torchvision.models as models
+import torchvision.models as models
 import torch, os
 from PIL import Image
 import cv2
@@ -7,6 +7,12 @@ import torchvision.transforms as transforms
 from torch.autograd import Variable
 import numpy as np
 import random
+import sys
+
+print(__name__)
+print(os.path.dirname(__file__))
+print(sys.path)
+sys.path.append(os.path.join(os.path.dirname(__file__),"../"))
 from recognize.crnn import CRNN
 from recognize import config
 from tensorboardX import SummaryWriter
