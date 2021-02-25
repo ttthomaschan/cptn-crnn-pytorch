@@ -49,7 +49,7 @@ def gen_anchor(featuresize, scale):
     heights = [11, 16, 23, 33, 48, 68, 97, 139, 198, 283]
     widths = [16, 16, 16, 16, 16, 16, 16, 16, 16, 16]
 
-    # gen k=9 anchor size (h,w)
+    # gen k=9 anchor size (h,w). it should be k=10 here
     heights = np.array(heights).reshape(len(heights), 1)
     widths = np.array(widths).reshape(len(widths), 1)
 

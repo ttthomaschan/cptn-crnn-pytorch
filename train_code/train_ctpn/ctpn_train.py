@@ -2,7 +2,6 @@
 #'''
 # Created on 18-12-27 上午10:31
 #
-# @Author: Greg Gao(laygin)
 #'''
 import os
 os.environ['CUDA_VISIBLE_DEVICES'] = '3'
@@ -21,7 +20,7 @@ random_seed = 2019
 torch.random.manual_seed(random_seed)
 np.random.seed(random_seed)
 
-epochs = 30
+epochs = 50
 lr = 1e-3
 resume_epoch = 0
 
@@ -38,6 +37,12 @@ def save_checkpoint(state, epoch, loss_cls, loss_regr, loss, ext='pth'):
         print('fail to save to {}'.format(check_path))
     print('saving to {}'.format(check_path))
 
+
+# 权重初始化常规方法为调用torch.nn.init中：
+# constant(tensor,val)
+# normal(tensor,mean=0,std=1)
+# xavier_uniform(tensor,gain)
+# 此处为权重初始化的特别设置
 def weights_init(m):
     classname = m.__class__.__name__
     if classname.find('Conv') != -1:
@@ -65,7 +70,7 @@ if __name__ == '__main__':
         model.load_state_dict(cc['model_state_dict'])
         resume_epoch = cc['epoch']
     else:
-        model.apply(weights_init)
+        model.apply(weights_init)   ## 函数-Module.apply(fn)：会递归地搜索网络内的所有module并把参数表示的函数应用到所有的module上。
 
     params_to_uodate = model.parameters()
     optimizer = optim.SGD(params_to_uodate, lr=lr, momentum=0.9)

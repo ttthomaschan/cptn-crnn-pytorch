@@ -2,7 +2,6 @@
 #'''
 # Created on 18-12-11 上午10:01
 #
-# @Author: Greg Gao(laygin)
 #'''
 import os
 import torch
@@ -90,7 +89,7 @@ class CTPN_Model(nn.Module):
     def __init__(self):
         super().__init__()
         base_model = models.vgg16(pretrained=False)
-        layers = list(base_model.features)[:-1]
+        layers = list(base_model.features)[:-1]    # select and chop from vgg16
         self.base_layers = nn.Sequential(*layers)  # block5_conv3 output
         self.rpn = basic_conv(512, 512, 3, 1, 1, bn=False)
         self.brnn = nn.GRU(512,128, bidirectional=True, batch_first=True)
