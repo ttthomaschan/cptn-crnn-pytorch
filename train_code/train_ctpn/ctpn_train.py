@@ -15,12 +15,15 @@ import config
 from ctpn_model import CTPN_Model, RPN_CLS_Loss, RPN_REGR_Loss
 from data.dataset import ICDARDataset
 
+from tensorboardX import SummaryWriter
+ 
+writer = SummaryWriter('runs/exp-1')
 
 random_seed = 2019
 torch.random.manual_seed(random_seed)
 np.random.seed(random_seed)
 
-epochs = 50
+epochs = 20
 lr = 1e-3
 resume_epoch = 0
 
@@ -59,7 +62,7 @@ if __name__ == '__main__':
     if os.path.exists(checkpoints_weight):
         pretrained = False
 
-    dataset = ICDARDataset(config.icdar17_mlt_img_dir, config.icdar17_mlt_gt_dir)
+    dataset = ICDARDataset(config.icdar19_mlt_img_dir, config.icdar19_mlt_gt_dir)
     dataloader = DataLoader(dataset, batch_size=1, shuffle=True, num_workers=config.num_workers)
     model = CTPN_Model()
     model.to(device)
@@ -121,6 +124,10 @@ if __name__ == '__main__':
                   f'batch: loss_cls:{loss_cls.item():.4f}--loss_regr:{loss_regr.item():.4f}--loss:{loss.item():.4f}\n'
                   f'Epoch: loss_cls:{epoch_loss_cls/mmp:.4f}--loss_regr:{epoch_loss_regr/mmp:.4f}--'
                   f'loss:{epoch_loss/mmp:.4f}\n')
+            
+            if batch_i % 10 == 0:
+                writer.add_scalar('loss_cls',epoch_loss_cls/mmp)
+                writer.add_scalar('loss_regs',epoch_loss_regr/mmp)
     
         epoch_loss_cls /= epoch_size
         epoch_loss_regr /= epoch_size

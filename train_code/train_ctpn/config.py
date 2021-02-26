@@ -10,12 +10,12 @@ base_dir = './images'
 img_dir = os.path.join(base_dir, 'VOC2007_text_detection/JPEGImages')
 xml_dir = os.path.join(base_dir, 'VOC2007_text_detection/Annotations')
 
-icdar17_mlt_img_dir = '/home/data2/egz/ICDAR2017_MLT/train/'
-icdar17_mlt_gt_dir = '/home/data2/egz/ICDAR2017_MLT/train_gt/'
-num_workers = 2
-pretrained_weights = 'checkpoints/v3_ctpn_ep22_0.3801_0.0971_0.4773.pth'
+icdar19_mlt_img_dir = '/home/elimen/Data/OCR_dataset/MLT2019/Task1/Images/'
+icdar19_mlt_gt_dir = '/home/elimen/Data/OCR_dataset/MLT2019/Task1/train_gt_t13/'
+num_workers = 8
+pretrained_weights = 'checkpoints/ctpn_epoch50_0.3801_0.0971_0.4773.pth'
 
-
+ 
 
 anchor_scale = 16
 IOU_NEGATIVE = 0.3
