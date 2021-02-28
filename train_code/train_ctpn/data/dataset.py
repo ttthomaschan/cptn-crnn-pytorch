@@ -2,7 +2,6 @@
 #'''
 # Created on 18-12-27 上午10:34
 #
-# @Author: Greg Gao(laygin)
 #'''
 
 import os
@@ -183,7 +182,7 @@ class ICDARDataset(Dataset):
             print(img_path)
             with open('error_imgs.txt','a') as f:
                 f.write('{}\n'.format(img_path))
-            img_name = 'img_2647.jpg'
+            img_name = 'tr_img_03048.jpg'
             img_path = os.path.join(self.datadir, img_name)
             img = cv2.imread(img_path)
 
@@ -196,10 +195,10 @@ class ICDARDataset(Dataset):
             w = int(w/rescale_fac)
             img = cv2.resize(img,(w,h))
 
-        gt_path = os.path.join(self.labelsdir, 'gt_'+img_name.split('.')[0]+'.txt')
+        gt_path = os.path.join(self.labelsdir, img_name.split('.')[0]+'.txt')
         gtbox = self.parse_gtfile(gt_path,rescale_fac)
 
-        # clip image
+        # Image transform: flip image --> flip the y-axis 
         if np.random.randint(2) == 1:
             img = img[:, ::-1, :]
             newx1 = w - gtbox[:, 2] - 1
@@ -210,7 +209,7 @@ class ICDARDataset(Dataset):
         [cls, regr], base_anchors = cal_rpn((h, w), (int(h / 16), int(w / 16)), 16, gtbox)
         # debug_img = self.draw_boxes(img.copy(),cls,base_anchors,gtbox)
         # cv2.imwrite('debug/{}'.format(img_name),debug_img)
-        m_img = img - IMAGE_MEAN
+        m_img = img - IMAGE_MEAN  ### what's the usage?
 
         regr = np.hstack([cls.reshape(cls.shape[0], 1), regr])
 

@@ -135,6 +135,7 @@ class PytorchOcr():
             image = image.cuda()
 
         preds = self.model(image)
+        # using tensorboardX to moniter -- added
         net = self.model
         #writer = SummaryWriter(log_dir='./log', comment='recognizer')
         #with writer:

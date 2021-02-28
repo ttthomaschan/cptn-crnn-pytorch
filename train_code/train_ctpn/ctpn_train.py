@@ -2,13 +2,13 @@
 #'''
 # Created on 18-12-27 上午10:31
 #
-# @Author: Greg Gao(laygin)
 #'''
 import os
 os.environ['CUDA_VISIBLE_DEVICES'] = '3'
 import torch
 from torch.utils.data import DataLoader
 from torch import optim
+import torchvision
 import numpy as np
 import argparse
 
@@ -16,12 +16,16 @@ import config
 from ctpn_model import CTPN_Model, RPN_CLS_Loss, RPN_REGR_Loss
 from data.dataset import ICDARDataset
 
+import cv2
+from tensorboardX import SummaryWriter
+ 
+writer = SummaryWriter('runs/exp-1')
 
 random_seed = 2019
 torch.random.manual_seed(random_seed)
 np.random.seed(random_seed)
 
-epochs = 30
+epochs = 20
 lr = 1e-3
 resume_epoch = 0
 
@@ -38,6 +42,12 @@ def save_checkpoint(state, epoch, loss_cls, loss_regr, loss, ext='pth'):
         print('fail to save to {}'.format(check_path))
     print('saving to {}'.format(check_path))
 
+
+# 权重初始化常规方法为调用torch.nn.init中：
+# constant(tensor,val)
+# normal(tensor,mean=0,std=1)
+# xavier_uniform(tensor,gain)
+# 此处为权重初始化的特别设置
 def weights_init(m):
     classname = m.__class__.__name__
     if classname.find('Conv') != -1:
@@ -49,12 +59,14 @@ def weights_init(m):
 
 if __name__ == '__main__':
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    print("device:")
+    print(torch.cuda.is_available())
     checkpoints_weight = config.pretrained_weights
     print('exist pretrained ',os.path.exists(checkpoints_weight))
     if os.path.exists(checkpoints_weight):
         pretrained = False
 
-    dataset = ICDARDataset(config.icdar17_mlt_img_dir, config.icdar17_mlt_gt_dir)
+    dataset = ICDARDataset(config.icdar19_mlt_img_dir, config.icdar19_mlt_gt_dir)
     dataloader = DataLoader(dataset, batch_size=1, shuffle=True, num_workers=config.num_workers)
     model = CTPN_Model()
     model.to(device)
@@ -65,7 +77,7 @@ if __name__ == '__main__':
         model.load_state_dict(cc['model_state_dict'])
         resume_epoch = cc['epoch']
     else:
-        model.apply(weights_init)
+        model.apply(weights_init)   ## 函数-Module.apply(fn)：会递归地搜索网络内的所有module并把参数表示的函数应用到所有的module上。
 
     params_to_uodate = model.parameters()
     optimizer = optim.SGD(params_to_uodate, lr=lr, momentum=0.9)
@@ -80,6 +92,17 @@ if __name__ == '__main__':
     epochs += resume_epoch
     scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
     
+    image, clsss, regrss = next(iter(dataloader))
+
+    # writer.add_images('images', image)
+    # print(len(image))
+    # print(image.device)
+    # print(next(model.parameters()).device)
+    # print(model)
+    # writer.add_graph(model,image)
+    # print(image)
+
+
     for epoch in range(resume_epoch+1, epochs):
         print(f'Epoch {epoch}/{epochs}')
         print('#'*50)
@@ -91,7 +114,7 @@ if __name__ == '__main__':
         scheduler.step(epoch)
     
         for batch_i, (imgs, clss, regrs) in enumerate(dataloader):
-            # print(imgs.shape)
+            print(imgs.shape)
             imgs = imgs.to(device)
             clss = clss.to(device)
             regrs = regrs.to(device)
@@ -116,6 +139,18 @@ if __name__ == '__main__':
                   f'batch: loss_cls:{loss_cls.item():.4f}--loss_regr:{loss_regr.item():.4f}--loss:{loss.item():.4f}\n'
                   f'Epoch: loss_cls:{epoch_loss_cls/mmp:.4f}--loss_regr:{epoch_loss_regr/mmp:.4f}--'
                   f'loss:{epoch_loss/mmp:.4f}\n')
+            
+            #writer.add_graph(model,imgs)
+            
+            #if batch_i % 10 == 0:
+            writer.add_scalar('loss_cls',epoch_loss_cls,batch_i)
+            writer.add_scalar('loss_regs',epoch_loss_regr,batch_i)
+
+            if epoch == 1 and batch_i == 0:
+                writer.add_graph(model,imgs)
+                print("writing graph to tensorboardx \n")
+                print(imgs.device)
+                print(next(model.parameters()).is_cuda)
     
         epoch_loss_cls /= epoch_size
         epoch_loss_regr /= epoch_size

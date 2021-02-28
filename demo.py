@@ -25,6 +25,7 @@ if __name__ == '__main__':
     for image_file in sorted(image_files):
         t = time.time()
         result, image_framed = single_pic_proc(image_file)
+        #print(result)
         output_file = os.path.join(result_dir, image_file.split('/')[-1])
         txt_file = os.path.join(result_dir, image_file.split('/')[-1].split('.')[0]+'.txt')
         print(txt_file)

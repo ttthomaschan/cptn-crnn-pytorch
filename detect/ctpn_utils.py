@@ -2,7 +2,6 @@
 #'''
 # Created on 18-12-11 上午10:05
 #
-# @Author: Greg Gao(laygin)
 #'''
 import numpy as np
 import cv2

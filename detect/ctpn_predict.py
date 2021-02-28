@@ -2,7 +2,6 @@
 #'''
 # Created on 18-12-11 上午10:03
 #
-# @Author: Greg Gao(laygin)
 #'''
 import os
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
@@ -107,7 +106,7 @@ def get_det_boxes(image,display = True, expand = True):
                             2,
                             cv2.LINE_AA)
             # dis(image_c)
-        # print(text)
+        print(text)
         return text,image_c,image_r
 
 if __name__ == '__main__':

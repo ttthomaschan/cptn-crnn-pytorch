@@ -18,8 +18,9 @@ def sort_box(box):
     box = sorted(box, key=lambda x: sum([x[1], x[3], x[5], x[7]]))
     return box
 
+## what's the actual usage of this function ? 
 def dumpRotateImage(img, degree, pt1, pt2, pt3, pt4):
-    height, width = img.shape[:2]
+    height, width = img.shape[:2]  
     heightNew = int(width * fabs(sin(radians(degree))) + height * fabs(cos(radians(degree))))
     widthNew = int(height * fabs(sin(radians(degree))) + width * fabs(cos(radians(degree))))
     matRotation = cv2.getRotationMatrix2D((width // 2, height // 2), degree, 1)
@@ -62,7 +63,7 @@ def charRec(img, text_recs, adjust=False):
         degree = degrees(atan2(pt2[1] - pt1[1], pt2[0] - pt1[0]))  # 图像倾斜角度
 
         partImg = dumpRotateImage(img, degree, pt1, pt2, pt3, pt4)
-        # dis(partImg)
+        #dis(partImg)
         if partImg.shape[0] < 1 or partImg.shape[1] < 1 or partImg.shape[0] > partImg.shape[1]:  # 过滤异常图片
             continue
         text = recognizer.recognize(partImg)
@@ -73,7 +74,7 @@ def charRec(img, text_recs, adjust=False):
 
     return results
 
-def ocr(image):
+# the input image is a one-channel-nparray imagedef ocr(image):
     # detect
     text_recs, img_framed, image = get_det_boxes(image)
     text_recs = sort_box(text_recs)

@@ -2,7 +2,6 @@
 #'''
 # Created on 18-12-11 上午10:03
 #
-# @Author: Greg Gao(laygin)
 #'''
 import os
 os.environ['CUDA_VISIBLE_DEVICES'] = ''
