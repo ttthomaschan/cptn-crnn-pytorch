@@ -353,13 +353,18 @@ class alignCollate(object):
 
 if __name__ == '__main__':
     import os
-    path = 'images'
+    import sys
+    print(sys.path)
+    path = '../../test_images'
     files = os.listdir(path)
+    print(files)
     idx = 0
     for f in files:
-        img_name = os.path.join(path,f)
-        img = Image.open(img_name)
-        img.show()
-        idx+=1
-        if idx>5:
-            break
+        #print(f)
+        if os.path.splitext(f)[1] == ".png":
+            img_name = os.path.join(path,f)
+            img = Image.open(img_name)
+            img.show()
+            idx+=1
+            if idx>5:
+                break

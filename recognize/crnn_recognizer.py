@@ -11,11 +11,11 @@ import sys
 
 print(__name__)
 print(os.path.dirname(__file__))
-print(sys.path)
 sys.path.append(os.path.join(os.path.dirname(__file__),"../"))
+print(sys.path)
 from recognize.crnn import CRNN
 from recognize import config
-from tensorboardX import SummaryWriter
+#from tensorboardX import SummaryWriter
 
 # copy from mydataset
 class resizeNormalize(object):
@@ -136,9 +136,9 @@ class PytorchOcr():
 
         preds = self.model(image)
         net = self.model
-        writer = SummaryWriter(log_dir='./log', comment='recognizer')
-        with writer:
-            writer.add_graph(net, (image,))
+        #writer = SummaryWriter(log_dir='./log', comment='recognizer')
+        #with writer:
+        #    writer.add_graph(net, (image,))
 
         _, preds = preds.max(2)
         preds = preds.transpose(1, 0).contiguous().view(-1)

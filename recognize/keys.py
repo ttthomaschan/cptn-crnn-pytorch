@@ -3,8 +3,8 @@ import sys
 import os
 print(__name__)
 print(__file__)
+sys.path.append(os.path.dirname(__file__))
 print(sys.path)
-sys.path.append(os.path.join(os.path.dirname(__file__),"../"))
 # gen alphabet via label
 # alphabet_set = set()
 # infofiles = ['infofiles/infofile_selfcollect.txt','infofiles/infofile_train_public.txt']
@@ -24,7 +24,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__),"../"))
 # alphabet_list = sorted(list(alphabet_set))
 # pkl.dump(alphabet_list,open('alphabet.pkl','wb'))
 
-alphabet_list = pkl.load(open('recognize/alphabet.pkl','rb'))
+alphabet_list = pkl.load(open('./alphabet.pkl','rb'))
 alphabet = [ord(ch) for ch in alphabet_list]
 alphabet_v2 = alphabet
 # print(alphabet_v2)
