@@ -11,9 +11,12 @@ img_dir = os.path.join(base_dir, 'VOC2007_text_detection/JPEGImages')
 xml_dir = os.path.join(base_dir, 'VOC2007_text_detection/Annotations')
 
 #icdar19_mlt_img_dir = '/home/elimen/Data/OCR_dataset/MLT2019/Task1/Images/'
-icdar19_mlt_img_dir = '/home/tthom/storage/DATA/MLT2019/Images/'
+#icdar19_mlt_img_dir = '/home/tthom/storage/DATA/MLT2019/Images/'
+icdar19_mlt_img_dir = '/mnt/data/Data/MLT2019/Images/'
 #icdar19_mlt_gt_dir = '/home/elimen/Data/OCR_dataset/MLT2019/Task1/train_gt_t13/'
-icdar19_mlt_gt_dir = '/home/tthom/storage/DATA/MLT2019/train_gt_t13/'
+#icdar19_mlt_gt_dir = '/home/tthom/storage/DATA/MLT2019/train_gt_t13/'
+icdar19_mlt_gt_dir = '/mnt/data/Data/MLT2019//train_gt_t13/'
+
 num_workers = 8
 pretrained_weights = 'checkpoints/ctpn_epoch50_0.3801_0.0971_0.4773.pth'
 

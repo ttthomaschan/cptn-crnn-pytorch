@@ -4,7 +4,7 @@
 #
 #'''
 import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '3'
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 import torch
 from torch.utils.data import DataLoader
 from torch import optim
@@ -93,6 +93,8 @@ if __name__ == '__main__':
     scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
     
     image, clsss, regrss = next(iter(dataloader))
+    image = image.to(device)
+    print(image.shape)
 
     # writer.add_images('images', image)
     # print(len(image))
@@ -122,6 +124,9 @@ if __name__ == '__main__':
             optimizer.zero_grad()
     
             out_cls, out_regr = model(imgs)
+            #with writer:
+            writer.add_graph(model,imgs)
+
             loss_cls = critetion_cls(out_cls, clss)
             loss_regr = critetion_regr(out_regr, regrs)
     
@@ -140,17 +145,17 @@ if __name__ == '__main__':
                   f'Epoch: loss_cls:{epoch_loss_cls/mmp:.4f}--loss_regr:{epoch_loss_regr/mmp:.4f}--'
                   f'loss:{epoch_loss/mmp:.4f}\n')
             
-            #writer.add_graph(model,imgs)
+            
             
             #if batch_i % 10 == 0:
-            writer.add_scalar('loss_cls',epoch_loss_cls,batch_i)
-            writer.add_scalar('loss_regs',epoch_loss_regr,batch_i)
+            #writer.add_scalar('loss_cls',epoch_loss_cls,batch_i)
+            #writer.add_scalar('loss_regs',epoch_loss_regr,batch_i)
 
-            if epoch == 1 and batch_i == 0:
-                writer.add_graph(model,imgs)
-                print("writing graph to tensorboardx \n")
-                print(imgs.device)
-                print(next(model.parameters()).is_cuda)
+            #if epoch == 1 and batch_i == 0:
+            #    writer.add_graph(model,imgs)
+            #    print("writing graph to tensorboardx \n")
+            #    print(imgs.device)
+            #    print(next(model.parameters()).is_cuda)
     
         epoch_loss_cls /= epoch_size
         epoch_loss_regr /= epoch_size
