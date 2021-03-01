@@ -79,8 +79,8 @@ if __name__ == '__main__':
     else:
         model.apply(weights_init)   ## 函数-Module.apply(fn)：会递归地搜索网络内的所有module并把参数表示的函数应用到所有的module上。
 
-    params_to_uodate = model.parameters()
-    optimizer = optim.SGD(params_to_uodate, lr=lr, momentum=0.9)
+    params_to_update = model.parameters()
+    optimizer = optim.SGD(params_to_update, lr=lr, momentum=0.9)
     
     critetion_cls = RPN_CLS_Loss(device)
     critetion_regr = RPN_REGR_Loss(device)
@@ -92,17 +92,15 @@ if __name__ == '__main__':
     epochs += resume_epoch
     scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
     
-    image, clsss, regrss = next(iter(dataloader))
-    image = image.to(device)
-    print(image.shape)
+    # image, clsss, regrss = next(iter(dataloader))
+    # image = image.to(device)
+    # print(image.shape)
 
-    # writer.add_images('images', image)
-    # print(len(image))
     # print(image.device)
     # print(next(model.parameters()).device)
-    # print(model)
-    # writer.add_graph(model,image)
-    # print(image)
+    # with writer:
+    #     writer.add_images('images', image)
+    #     writer.add_graph(model,image)
 
 
     for epoch in range(resume_epoch+1, epochs):
@@ -125,7 +123,7 @@ if __name__ == '__main__':
     
             out_cls, out_regr = model(imgs)
             #with writer:
-            writer.add_graph(model,imgs)
+            #    writer.add_graph(model,imgs)
 
             loss_cls = critetion_cls(out_cls, clss)
             loss_regr = critetion_regr(out_regr, regrs)
@@ -138,6 +136,7 @@ if __name__ == '__main__':
             epoch_loss_regr += loss_regr.item()
             epoch_loss += loss.item()
             mmp = batch_i+1
+            
     
             print(f'Ep:{epoch}/{epochs-1}--'
                   f'Batch:{batch_i}/{epoch_size}\n'
@@ -146,10 +145,11 @@ if __name__ == '__main__':
                   f'loss:{epoch_loss/mmp:.4f}\n')
             
             
-            
-            #if batch_i % 10 == 0:
-            #writer.add_scalar('loss_cls',epoch_loss_cls,batch_i)
-            #writer.add_scalar('loss_regs',epoch_loss_regr,batch_i)
+            if batch_i % 10 == 9:
+                #writer.add_scalar('loss_cls', epoch_loss_cls/mmp, epoch*10000+batch_i)
+                #writer.add_scalar('loss_regs', epoch_loss_regr/mmp, epoch*10000+batch_i)
+                writer.add_scalar('loss_cls', loss_cls.item(), epoch*10000+batch_i)
+                writer.add_scalar('loss_regs', loss_regr.item(), epoch*10000+batch_i)
 
             #if epoch == 1 and batch_i == 0:
             #    writer.add_graph(model,imgs)

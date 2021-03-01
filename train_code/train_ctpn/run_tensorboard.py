@@ -3,6 +3,9 @@ import torchvision
 from torch.utils.tensorboard import SummaryWriter
 from torchvision import datasets, transforms
 
+device = "cuda:3" if torch.cuda.is_available() else "cpu"
+print(device)
+
 # 设置输出文件目录
 writer = SummaryWriter('runs/test')
 
@@ -16,8 +19,12 @@ images, labels = next(iter(trainloader))
 print(len(images))
 print(images.device)
 print(next(model.parameters()).device)
+images = images.to(device)
+model.to(device)
+print(images.device)
+print(next(model.parameters()).device)
 grid = torchvision.utils.make_grid(images)
-writer.add_images   ('images', images)
+writer.add_images('images', images)
 # 写入图像数据 
 writer.add_graph(model, images)
 # 写入模型
