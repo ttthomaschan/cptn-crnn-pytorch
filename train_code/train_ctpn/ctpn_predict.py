@@ -7,6 +7,7 @@ import os
 os.environ['CUDA_VISIBLE_DEVICES'] = ''
 import cv2
 import numpy as np
+import time
 
 import torch
 import torch.nn.functional as F
@@ -19,7 +20,7 @@ import config
 prob_thresh = 0.5
 width = 960
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-weights = os.path.join(config.checkpoints_dir, 'v3_ctpn_ep30_0.3699_0.0929_0.4628.pth')#'ctpn_ep17_0.0544_0.1125_0.1669.pth')
+weights = os.path.join(config.checkpoints_dir, 'v3_ctpn_best.pth')
 
 
 model = CTPN_Model()
@@ -91,8 +92,12 @@ def get_det_boxes(image,display = True):
         return text,image_c
 
 if __name__ == '__main__':
-    img_path = 'images/t1.png'
+    
+    img_path = './test/images/idcard.jpg'
     image = cv2.imread(img_path)
+    t_start = time.time()
     text,image = get_det_boxes(image)
-    cv2.imwrite('results/t.jpg',image)
+    utime = time.time() - t_start
+    print(utime)
+    cv2.imwrite('./test/results/idcard_result.jpg',image)
     # dis(image)

@@ -33,7 +33,7 @@ resume_epoch = 0
 def save_checkpoint(state, epoch, loss_cls, loss_regr, loss, ext='pth'):
     check_path = os.path.join(config.checkpoints_dir,
                               f'v3_ctpn_ep{epoch:02d}_'
-                              f'{loss_cls:.4f}_{loss_regr:.4f}_{loss:.4f}.{ext}')
+                              f'best.{ext}')
 
     try:
         torch.save(state, check_path)
@@ -143,13 +143,6 @@ if __name__ == '__main__':
                   f'batch: loss_cls:{loss_cls.item():.4f}--loss_regr:{loss_regr.item():.4f}--loss:{loss.item():.4f}\n'
                   f'Epoch: loss_cls:{epoch_loss_cls/mmp:.4f}--loss_regr:{epoch_loss_regr/mmp:.4f}--'
                   f'loss:{epoch_loss/mmp:.4f}\n')
-            
-            
-            if batch_i % 10 == 9:
-                #writer.add_scalar('loss_cls', epoch_loss_cls/mmp, epoch*10000+batch_i)
-                #writer.add_scalar('loss_regs', epoch_loss_regr/mmp, epoch*10000+batch_i)
-                writer.add_scalar('loss_cls', loss_cls.item(), epoch*10000+batch_i)
-                writer.add_scalar('loss_regs', loss_regr.item(), epoch*10000+batch_i)
 
             #if epoch == 1 and batch_i == 0:
             #    writer.add_graph(model,imgs)
@@ -160,7 +153,10 @@ if __name__ == '__main__':
         epoch_loss_cls /= epoch_size
         epoch_loss_regr /= epoch_size
         epoch_loss /= epoch_size
+        writer.add_scalar('loss_cls', epoch_loss_cls, epoch)
+        writer.add_scalar('loss_regs', epoch_loss_regr, epoch)
         print(f'Epoch:{epoch}--{epoch_loss_cls:.4f}--{epoch_loss_regr:.4f}--{epoch_loss:.4f}')
+        
         if best_loss_cls > epoch_loss_cls or best_loss_regr > epoch_loss_regr or best_loss > epoch_loss:
             best_loss = epoch_loss
             best_loss_regr = epoch_loss_regr
